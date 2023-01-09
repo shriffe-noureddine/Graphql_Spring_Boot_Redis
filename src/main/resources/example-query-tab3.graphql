@@ -1,0 +1,97 @@
+# Step 0: Copy & Paste
+# Copy & Paste the whole content (Command/Ctrl-A, Command/Ctrl-X and Command/Ctrl-V) in the editor
+# there is a bug that executes the same query.
+
+# Start with Step 0
+# Step 1: Run createCustomer mutation to create a customer using fields: name, and industry
+# Redis commands used: INCR, HMSET, SADD, and XADD
+mutation createCustomer { # Place cursor here: Run (Command/Ctrl-Enter)
+    createCustomer(input: { name: "RedisLabs", industry: "Data Storage" }) {
+        id
+        name
+        industry
+    }
+}
+
+# Step 1.1: Goto GraphQL-Streaming-Demo:Tab-1, and GraphQL-Streaming-Demo:Tab-2 to see the created events
+
+#------------
+
+# Step 2: Run updateCustomer mutation to update a customer using fields: customer id, name, and industry
+# Redis commands used: HGETALL, DEL, HMSET, SADD, and XADD
+mutation updateCustomer { # Place cursor here: Run (Command/Ctrl-Enter)
+    updateCustomer(
+        id: 6
+        input: { name: "RedisLabs is awesome", industry: "Data Storage" }
+    ) {
+        id
+        name
+        industry
+    }
+}
+
+# Step 2.1: Goto GraphQL-Streaming-Demo:Tab-1, and GraphQL-Streaming-Demo:Tab-2 to see the updated events
+
+#------------
+
+# Step 3: Run deleteCustomer mutation to delete a customer using fields: customer id
+# Redis commands used: HGETALL, DEL, SREM, and XADD
+mutation deleteCustomer { # Place cursor here: Run (Command/Ctrl-Enter)
+    deleteCustomer(id: 2) {
+        id
+        name
+    }
+}
+
+# Note: It errors when no customer found, follow Step 4 to find a customer id
+# Step 3.1: Goto GraphQL-Streaming-Demo:Tab-1, and GraphQL-Streaming-Demo:Tab-2 to see the deleted events
+
+#------------
+
+
+# Step 4: Run customers query to see the existing customers
+# Redis commands used: SMEMBERS, HGETALL
+query customers { # Place cursor here: Run (Command/Ctrl-Enter)
+    customers {
+        id
+        name
+        industry
+    }
+}
+# Step 4: Run findCustomer query to find a customer
+# Redis commands used: HGETALL
+query findCustomer { # Place cursor here: Run (Command/Ctrl-Enter)
+    findCustomer(id: 3) {
+        id
+        name
+        industry
+    }
+}
+
+# Step 5: Run searchCustomers_1 query to search customer based on customer fields: id, name, and industry
+# sorted by name
+# Redis commands used: FT.SEARCH
+query searchCustomers_1 { # Place cursor here: Run (Command/Ctrl-Enter)
+    searchCustomers(q: "%a%") {
+        id
+        name
+        industry
+    }
+}
+
+# Step 6: Run searchCustomers_2 query to search customer based on customer fields: id, name, and industry
+# sorted by name
+# Redis commands used: FT.SEARCH
+query searchCustomers_2 { # Place cursor here: Run (Command/Ctrl-Enter)
+    searchCustomers(q: "Red*") {
+        id
+        name
+        industry
+    }
+}
+
+# Step 7: Reset the databse if you want
+# Redis commands used: FLUSHALL, FT.INFO, and FT.CREATE
+mutation resetRedis { # Place cursor here: Run (Command/Ctrl-Enter)
+    resetRedis
+}
